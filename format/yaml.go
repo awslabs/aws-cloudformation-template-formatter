@@ -70,13 +70,13 @@ func formatMap(data map[string]interface{}, path []string) string {
 		parts[i] = fmtValue
 	}
 
-	output := strings.Join(parts, "\n")
+	joiner := "\n"
 
-	if len(path) == 2 {
-		output += "\n"
+	if len(path) <= 1 {
+		joiner = "\n\n"
 	}
 
-	return output
+	return strings.Join(parts, joiner)
 }
 
 func formatList(data []interface{}, path []string) string {
