@@ -171,3 +171,118 @@ func TestCfnYaml(t *testing.T) {
 		}
 	}
 }
+
+func TestIntrinsicKey(t *testing.T) {
+	cases := []map[string]interface{}{
+		map[string]interface{}{
+			"Ref": "foo",
+		},
+		map[string]interface{}{
+			"Fn::Sub": "The cake is a lie",
+		},
+		map[string]interface{}{
+			"Fn::NotARealFn": "This is not real but we'll take it",
+		},
+		map[string]interface{}{
+			"Func::Join": "joined",
+		},
+		map[string]interface{}{
+			"NoFunc": "Not a func for sure!",
+		},
+	}
+
+	expecteds := []string{
+		"Ref",
+		"Fn::Sub",
+		"Fn::NotARealFn",
+		"",
+		"",
+	}
+
+	for i, testCase := range cases {
+		expected := expecteds[i]
+		expectedOk := true
+
+		if expected == "" {
+			expectedOk = false
+		}
+
+		actual, actualOk := intrinsicKey(testCase)
+
+		if actual != expected || actualOk != expectedOk {
+			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+		}
+	}
+}
+
+func TestIntrinsics(t *testing.T) {
+	cases := []interface{}{
+		map[string]interface{}{
+			"foo": map[string]interface{}{
+				"Ref": "bar",
+			},
+		},
+		map[string]interface{}{
+			"foo": map[string]interface{}{
+				"Fn::Sub": []interface{}{
+					"The ${key} is a ${value}",
+					map[string]interface{}{
+						"key":   "cake",
+						"value": "lie",
+					},
+				},
+			},
+		},
+	}
+
+	expecteds := []string{
+		"foo: !Ref bar",
+		"foo: !Sub\n  - The ${key} is a ${value}\n  - key: cake\n    value: lie",
+	}
+
+	for i, testCase := range cases {
+		expected := expecteds[i]
+
+		actual := Yaml(testCase)
+
+		if actual != expected {
+			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+		}
+	}
+}
+
+func TestStrings(t *testing.T) {
+	cases := []string{
+		"foo",
+		"*",
+		"* bar",
+		"2012-05-02",
+		"today is 2012-05-02",
+		": thing",
+		"Yes",
+		"No",
+		"multi\nline",
+	}
+
+	expecteds := []string{
+		"foo",
+		"\"*\"",
+		"\"* bar\"",
+		"\"2012-05-02\"",
+		"today is 2012-05-02",
+		"\": thing\"",
+		"\"Yes\"",
+		"\"No\"",
+		"\"multi\\nline\"",
+	}
+
+	for i, testCase := range cases {
+		expected := expecteds[i]
+
+		actual := Yaml(testCase)
+
+		if actual != expected {
+			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+		}
+	}
+}

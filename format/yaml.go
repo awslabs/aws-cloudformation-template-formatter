@@ -2,6 +2,7 @@ package format
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 )
@@ -45,6 +46,35 @@ func sortKeys(data map[string]interface{}, path []string) []string {
 	return append(orderedKeys, otherKeys...)
 }
 
+func intrinsicKey(data map[string]interface{}) (string, bool) {
+	if len(data) != 1 {
+		return "", false
+	}
+
+	// We know there's one key
+	key := reflect.ValueOf(data).MapKeys()[0].String()
+	if key == "Ref" || strings.HasPrefix(key, "Fn::") {
+		return key, true
+	}
+
+	return "", false
+}
+
+func formatIntrinsic(key string, data interface{}, path []string) string {
+	shortKey := strings.Replace(key, "Fn::", "", 1)
+
+	fmtValue := yaml(data, path)
+
+	switch data.(type) {
+	case map[string]interface{}:
+		return fmt.Sprintf("!%s\n  %s", shortKey, indent(fmtValue))
+	case []interface{}:
+		return fmt.Sprintf("!%s\n  %s", shortKey, indent(fmtValue))
+	default:
+		return fmt.Sprintf("!%s %s", shortKey, yaml(data, path))
+	}
+}
+
 func formatMap(data map[string]interface{}, path []string) string {
 	if len(data) == 0 {
 		return "{}"
@@ -58,9 +88,14 @@ func formatMap(data map[string]interface{}, path []string) string {
 		value := data[key]
 		fmtValue := yaml(value, append(path, key))
 
-		switch value.(type) {
+		switch v := value.(type) {
 		case map[string]interface{}:
-			fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
+			if iKey, ok := intrinsicKey(v); ok {
+				fmtValue = formatIntrinsic(iKey, v[iKey], append(path, key))
+				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
+			} else {
+				fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
+			}
 		case []interface{}:
 			fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
 		default:
@@ -95,12 +130,33 @@ func formatList(data []interface{}, path []string) string {
 	return strings.Join(parts, "\n")
 }
 
+func formatString(data string) string {
+	quote := false
+
+	switch {
+	case data == "Yes" || data == "No":
+		quote = true
+	case strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@`\"'[{:"):
+		quote = true
+	case strings.ContainsAny(data, "\n"):
+		quote = true
+	}
+
+	if quote {
+		return fmt.Sprintf("%q", data)
+	}
+
+	return data
+}
+
 func yaml(data interface{}, path []string) string {
 	switch value := data.(type) {
 	case map[string]interface{}:
 		return formatMap(value, path)
 	case []interface{}:
 		return formatList(value, path)
+	case string:
+		return formatString(value)
 	default:
 		return fmt.Sprint(value)
 	}
