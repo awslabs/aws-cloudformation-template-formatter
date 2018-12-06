@@ -2,6 +2,8 @@
 
 * Add long/multi-line string handling
 
+* Make `common.go` a bit more intuitive to maintain
+
 * deal with ordering in more resource types
 
     * e.g. IAM policies
