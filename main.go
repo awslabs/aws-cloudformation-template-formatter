@@ -15,7 +15,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Printf("Usage: %s <filename>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s <filename>\n", os.Args[0])
 		os.Exit(1)
 	}
 
@@ -26,9 +26,11 @@ func main() {
 		NoProcess: true,
 	})
 	if err != nil {
-		panic("Could not read template: " + err.Error())
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
+	// Convert to JSON and back just to get rid of the goformation types
 	sourceJson, err := json.Marshal(source)
 	sourceValue := make(map[string]interface{})
 	err = json.Unmarshal(sourceJson, &sourceValue)
