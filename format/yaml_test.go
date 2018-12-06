@@ -77,7 +77,7 @@ func TestYamlList(t *testing.T) {
 		"- 1\n- foo\n- true",
 		"- - foo\n  - bar\n- baz",
 		"- - - foo\n    - bar\n  - baz\n- quux",
-		"- foo: bar\n- baz: quux\n  mooz: xyzzy",
+		"- foo: bar\n- baz: quux\n\n  mooz: xyzzy",
 	}
 
 	for i, testCase := range cases {
@@ -130,10 +130,10 @@ func TestYamlMap(t *testing.T) {
 	expecteds := []string{
 		"{}",
 		"foo: bar",
-		"baz: quux\nfoo: bar",
-		"foo:\n  bar: baz\nquux: mooz",
-		"alpha: beta\nfoo:\n  bar:\n    baz: quux\n\n  mooz: xyzzy",
-		"foo:\n  - bar\n  - baz\nquux:\n  - mooz",
+		"baz: quux\n\nfoo: bar",
+		"foo:\n  bar: baz\n\nquux: mooz",
+		"alpha: beta\n\nfoo:\n  bar:\n    baz: quux\n\n  mooz: xyzzy",
+		"foo:\n  - bar\n  - baz\n\nquux:\n  - mooz",
 	}
 
 	for i, testCase := range cases {
@@ -158,7 +158,7 @@ func TestCfnYaml(t *testing.T) {
 	}
 
 	expecteds := []string{
-		"Parameters: baz\nResources: xyzzy\nFoo: bar\nQuux: mooz",
+		"Parameters: baz\n\nResources: xyzzy\n\nFoo: bar\n\nQuux: mooz",
 	}
 
 	for i, testCase := range cases {
