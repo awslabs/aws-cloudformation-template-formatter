@@ -286,3 +286,19 @@ func TestStrings(t *testing.T) {
 		}
 	}
 }
+
+func TestLongStrings(t *testing.T) {
+	cases := []string{}
+
+	expecteds := []string{}
+
+	for i, testCase := range cases {
+		expected := expecteds[i]
+
+		actual := Yaml(testCase)
+
+		if actual != expected {
+			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+		}
+	}
+}
