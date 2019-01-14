@@ -64,11 +64,11 @@ func formatString(data string) string {
 	quote := false
 
 	switch {
-	case data == "Yes" || data == "No":
-		quote = true
-	case strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@`\"'[{:"):
-		quote = true
-	case strings.ContainsAny(data, "\n"):
+	case strings.ContainsAny(data, "\n"),
+		data == "",
+		data == "Yes" || data == "No",
+		strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@`\"'[{: -\\"),
+		strings.ContainsAny(data, "`\"'"):
 		quote = true
 	}
 
