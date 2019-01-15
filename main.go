@@ -26,8 +26,7 @@ func main() {
 		NoProcess: true,
 	})
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		panic("Unable to process input template: " + err.Error())
 	}
 
 	// Convert to JSON and back just to get rid of the goformation types
@@ -37,4 +36,6 @@ func main() {
 
 	// YAMLise!
 	fmt.Println(format.Yaml(sourceValue))
+	fmt.Println("---")
+	fmt.Println(format.Json(sourceValue))
 }
