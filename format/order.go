@@ -1,6 +1,6 @@
 package format
 
-func ordering(path []string) []string {
+func ordering(path []interface{}) []string {
 	switch {
 	case len(path) == 0:
 		return []string{

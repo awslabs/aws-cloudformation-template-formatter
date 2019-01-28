@@ -5,22 +5,22 @@ import (
 )
 
 func TestYamlScalars(t *testing.T) {
-	cases := []interface{}{
-		1,
-		1.0,
-		1.234,
-		"hello",
-		true,
-		false,
+	cases := []map[string]interface{}{
+		{"foo": 1},
+		{"foo": 1.0},
+		{"foo": 1.234},
+		{"foo": "hello"},
+		{"foo": true},
+		{"foo": false},
 	}
 
 	expecteds := []string{
-		"1",
-		"1",
-		"1.234",
-		"hello",
-		"true",
-		"false",
+		"foo: 1",
+		"foo: 1",
+		"foo: 1.234",
+		"foo: hello",
+		"foo: true",
+		"foo: false",
 	}
 
 	for i, testCase := range cases {
@@ -35,22 +35,22 @@ func TestYamlScalars(t *testing.T) {
 }
 
 func TestYamlList(t *testing.T) {
-	cases := []interface{}{
-		[]interface{}{},
-		[]interface{}{1},
-		[]interface{}{
+	cases := []map[string]interface{}{
+		{"foo": []interface{}{}},
+		{"foo": []interface{}{1}},
+		{"foo": []interface{}{
 			1,
 			"foo",
 			true,
-		},
-		[]interface{}{
+		}},
+		{"foo": []interface{}{
 			[]interface{}{
 				"foo",
 				"bar",
 			},
 			"baz",
-		},
-		[]interface{}{
+		}},
+		{"foo": []interface{}{
 			[]interface{}{
 				[]interface{}{
 					"foo",
@@ -59,8 +59,8 @@ func TestYamlList(t *testing.T) {
 				"baz",
 			},
 			"quux",
-		},
-		[]interface{}{
+		}},
+		{"foo": []interface{}{
 			map[string]interface{}{
 				"foo": "bar",
 			},
@@ -68,16 +68,16 @@ func TestYamlList(t *testing.T) {
 				"baz":  "quux",
 				"mooz": "xyzzy",
 			},
-		},
+		}},
 	}
 
 	expecteds := []string{
-		"[]",
-		"- 1",
-		"- 1\n- foo\n- true",
-		"- - foo\n  - bar\n- baz",
-		"- - - foo\n    - bar\n  - baz\n- quux",
-		"- foo: bar\n- baz: quux\n\n  mooz: xyzzy",
+		"foo: []",
+		"foo:\n  - 1",
+		"foo:\n  - 1\n  - foo\n  - true",
+		"foo:\n  - - foo\n    - bar\n  - baz",
+		"foo:\n  - - - foo\n      - bar\n    - baz\n  - quux",
+		"foo:\n  - foo: bar\n  - baz: quux\n    mooz: xyzzy",
 	}
 
 	for i, testCase := range cases {
@@ -92,22 +92,22 @@ func TestYamlList(t *testing.T) {
 }
 
 func TestYamlMap(t *testing.T) {
-	cases := []interface{}{
-		map[string]interface{}{},
-		map[string]interface{}{
+	cases := []map[string]interface{}{
+		{},
+		{
 			"foo": "bar",
 		},
-		map[string]interface{}{
+		{
 			"foo": "bar",
 			"baz": "quux",
 		},
-		map[string]interface{}{
+		{
 			"foo": map[string]interface{}{
 				"bar": "baz",
 			},
 			"quux": "mooz",
 		},
-		map[string]interface{}{
+		{
 			"foo": map[string]interface{}{
 				"bar": map[string]interface{}{
 					"baz": "quux",
@@ -116,7 +116,7 @@ func TestYamlMap(t *testing.T) {
 			},
 			"alpha": "beta",
 		},
-		map[string]interface{}{
+		{
 			"foo": []interface{}{
 				"bar",
 				"baz",
@@ -148,8 +148,8 @@ func TestYamlMap(t *testing.T) {
 }
 
 func TestCfnYaml(t *testing.T) {
-	cases := []interface{}{
-		map[string]interface{}{
+	cases := []map[string]interface{}{
+		{
 			"Quux":       "mooz",
 			"Parameters": "baz",
 			"Foo":        "bar",
@@ -216,13 +216,13 @@ func TestIntrinsicKey(t *testing.T) {
 }
 
 func TestIntrinsics(t *testing.T) {
-	cases := []interface{}{
-		map[string]interface{}{
+	cases := []map[string]interface{}{
+		{
 			"foo": map[string]interface{}{
 				"Ref": "bar",
 			},
 		},
-		map[string]interface{}{
+		{
 			"foo": map[string]interface{}{
 				"Fn::Sub": []interface{}{
 					"The ${key} is a ${value}",
@@ -252,28 +252,28 @@ func TestIntrinsics(t *testing.T) {
 }
 
 func TestStrings(t *testing.T) {
-	cases := []string{
-		"foo",
-		"*",
-		"* bar",
-		"2012-05-02",
-		"today is 2012-05-02",
-		": thing",
-		"Yes",
-		"No",
-		"multi\nline",
+	cases := []map[string]interface{}{
+		{"foo": "foo"},
+		{"foo": "*"},
+		{"foo": "* bar"},
+		{"foo": "2012-05-02"},
+		{"foo": "today is 2012-05-02"},
+		{"foo": ": thing"},
+		{"foo": "Yes"},
+		{"foo": "No"},
+		{"foo": "multi\nline"},
 	}
 
 	expecteds := []string{
-		"foo",
-		"\"*\"",
-		"\"* bar\"",
-		"\"2012-05-02\"",
-		"today is 2012-05-02",
-		"\": thing\"",
-		"\"Yes\"",
-		"\"No\"",
-		"\"multi\\nline\"",
+		"foo: foo",
+		"foo: \"*\"",
+		"foo: \"* bar\"",
+		"foo: \"2012-05-02\"",
+		"foo: today is 2012-05-02",
+		"foo: \": thing\"",
+		"foo: \"Yes\"",
+		"foo: \"No\"",
+		"foo: \"multi\\nline\"",
 	}
 
 	for i, testCase := range cases {
@@ -287,18 +287,27 @@ func TestStrings(t *testing.T) {
 	}
 }
 
-func TestLongStrings(t *testing.T) {
-	cases := []string{}
+func TestComments(t *testing.T) {
+	dataCases := []map[string]interface{}{
+		{"foo": "bar"},
+	}
 
-	expecteds := []string{}
+	commentCases := []map[string]interface{}{
+		{"foo": "This is bar"},
+	}
 
-	for i, testCase := range cases {
+	expecteds := []string{
+		"foo: bar  # This is bar",
+	}
+
+	for i, data := range dataCases {
+		comments := commentCases[i]
 		expected := expecteds[i]
 
-		actual := Yaml(testCase)
+		actual := YamlWithComments(data, comments)
 
 		if actual != expected {
-			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+			t.Errorf("from %q != %q\n", actual, expected)
 		}
 	}
 }

@@ -5,69 +5,128 @@ import (
 	"strings"
 )
 
-func formatYamlIntrinsic(key string, data interface{}, path []string) string {
-	shortKey := strings.Replace(key, "Fn::", "", 1)
+type yamlParser struct {
+	data         map[string]interface{}
+	comments     map[string]interface{}
+	path         []interface{}
+	currentValue interface{}
+}
 
-	fmtValue := yaml(data, path)
-
-	switch data.(type) {
-	case map[string]interface{}:
-		return fmt.Sprintf("!%s\n  %s", shortKey, indent(fmtValue))
-	case []interface{}:
-		return fmt.Sprintf("!%s\n  %s", shortKey, indent(fmtValue))
-	default:
-		return fmt.Sprintf("!%s %s", shortKey, yaml(data, path))
+func newYamlParserWithComments(data, comments map[string]interface{}) yamlParser {
+	return yamlParser{
+		data,
+		comments,
+		make([]interface{}, 0),
+		data,
 	}
 }
 
-func formatYamlMap(data map[string]interface{}, path []string) string {
+func newYamlParser(data map[string]interface{}) yamlParser {
+	return newYamlParserWithComments(data, nil)
+}
+
+func (p *yamlParser) push(key interface{}) {
+	p.path = append(p.path, key)
+	p.currentValue = p.get()
+}
+
+func (p *yamlParser) pop() {
+	p.path = p.path[:len(p.path)-1]
+	p.currentValue = p.get()
+}
+
+// TODO: Move this to common
+func (p yamlParser) get() interface{} {
+	currentValue := interface{}(p.data)
+
+	for _, part := range p.path {
+		switch v := currentValue.(type) {
+		case map[string]interface{}:
+			currentValue = v[part.(string)]
+		case []interface{}:
+			currentValue = v[part.(int)]
+		default:
+			panic(fmt.Sprintf("Something has gone wrong with the path: %v\n", p.path))
+		}
+	}
+
+	return currentValue
+}
+
+func (p yamlParser) formatIntrinsic(key string) string {
+	p.push(key)
+	defer p.pop()
+
+	shortKey := strings.Replace(key, "Fn::", "", 1)
+
+	fmtValue := p.format()
+
+	switch p.get().(type) {
+	case map[string]interface{}, []interface{}:
+		return fmt.Sprintf("!%s\n  %s", shortKey, indent(fmtValue))
+	default:
+		return fmt.Sprintf("!%s %s", shortKey, fmtValue)
+	}
+}
+
+func (p yamlParser) formatMap(data map[string]interface{}) string {
 	if len(data) == 0 {
 		return "{}"
 	}
 
-	keys := sortKeys(data, path)
+	keys := sortKeys(data, p.path)
 
 	parts := make([]string, len(keys))
 
 	for i, key := range keys {
 		value := data[key]
-		fmtValue := yaml(value, append(path, key))
+
+		p.push(key)
+		fmtValue := p.format()
 
 		switch v := value.(type) {
 		case map[string]interface{}:
 			if iKey, ok := intrinsicKey(v); ok {
-				fmtValue = formatYamlIntrinsic(iKey, v[iKey], append(path, key))
+				fmtValue = p.formatIntrinsic(iKey)
 				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
 			} else {
 				fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
 			}
 		case []interface{}:
-			fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
+			if fmtValue == "[]" {
+				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
+			} else {
+				fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
+			}
 		default:
 			fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
 		}
 
 		parts[i] = fmtValue
+
+		p.pop()
 	}
 
 	joiner := "\n"
 
-	if len(path) <= 1 {
+	if len(p.path) <= 1 {
 		joiner = "\n\n"
 	}
 
 	return strings.Join(parts, joiner)
 }
 
-func formatYamlList(data []interface{}, path []string) string {
+func (p yamlParser) formatList(data []interface{}) string {
 	if len(data) == 0 {
 		return "[]"
 	}
 
 	parts := make([]string, len(data))
 
-	for i, value := range data {
-		fmtValue := yaml(value, append(path, string(i)))
+	for i, _ := range data {
+		p.push(i)
+		fmtValue := p.format()
+		p.pop()
 
 		parts[i] = fmt.Sprintf("- %s", indent(fmtValue))
 	}
@@ -75,22 +134,23 @@ func formatYamlList(data []interface{}, path []string) string {
 	return strings.Join(parts, "\n")
 }
 
-func yaml(data interface{}, path []string) string {
-	if value, ok := data.(map[string]interface{}); ok {
-		return formatYamlMap(value, path)
+func (p yamlParser) format() string {
+	switch v := p.currentValue.(type) {
+	case map[string]interface{}:
+		return p.formatMap(v)
+	case []interface{}:
+		return p.formatList(v)
+	case string:
+		return formatString(v)
+	default:
+		return fmt.Sprint(v)
 	}
-
-	if value, ok := data.([]interface{}); ok {
-		return formatYamlList(value, path)
-	}
-
-	if value, ok := data.(string); ok {
-		return formatString(value)
-	}
-
-	return fmt.Sprint(data)
 }
 
-func Yaml(data interface{}) string {
-	return yaml(data, make([]string, 0))
+func Yaml(data map[string]interface{}) string {
+	return newYamlParser(data).format()
+}
+
+func YamlWithComments(data, comments map[string]interface{}) string {
+	return newYamlParserWithComments(data, comments).format()
 }

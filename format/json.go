@@ -21,7 +21,7 @@ func indentJson(in string) string {
 	return strings.Join(parts, "\n")
 }
 
-func formatJsonIntrinsic(key string, data interface{}, path []string) string {
+func formatJsonIntrinsic(key string, data interface{}, path []interface{}) string {
 	shortKey := strings.Replace(key, "Fn::", "", 1)
 
 	fmtValue := json(data, path)
@@ -36,7 +36,7 @@ func formatJsonIntrinsic(key string, data interface{}, path []string) string {
 	}
 }
 
-func formatJsonMap(data map[string]interface{}, path []string) string {
+func formatJsonMap(data map[string]interface{}, path []interface{}) string {
 	if len(data) == 0 {
 		return "{}"
 	}
@@ -57,7 +57,7 @@ func formatJsonMap(data map[string]interface{}, path []string) string {
 	return "{\n" + indentJson(strings.Join(parts, joiner)) + "\n}"
 }
 
-func formatJsonList(data []interface{}, path []string) string {
+func formatJsonList(data []interface{}, path []interface{}) string {
 	if len(data) == 0 {
 		return "[]"
 	}
@@ -65,7 +65,7 @@ func formatJsonList(data []interface{}, path []string) string {
 	parts := make([]string, len(data))
 
 	for i, value := range data {
-		fmtValue := json(value, append(path, string(i)))
+		fmtValue := json(value, append(path, i))
 
 		parts[i] = indentJson(fmtValue)
 	}
@@ -73,7 +73,7 @@ func formatJsonList(data []interface{}, path []string) string {
 	return "[\n" + strings.Join(parts, ",\n") + "\n]"
 }
 
-func json(data interface{}, path []string) string {
+func json(data interface{}, path []interface{}) string {
 	if value, ok := data.(map[string]interface{}); ok {
 		return formatJsonMap(value, path)
 	}
@@ -90,5 +90,5 @@ func json(data interface{}, path []string) string {
 }
 
 func Json(data interface{}) string {
-	return json(data, make([]string, 0))
+	return json(data, make([]interface{}, 0))
 }

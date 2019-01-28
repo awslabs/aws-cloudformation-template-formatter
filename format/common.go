@@ -19,7 +19,7 @@ func indent(in string) string {
 	return strings.TrimLeft(strings.Join(parts, "\n"), " ")
 }
 
-func sortKeys(data map[string]interface{}, path []string) []string {
+func sortKeys(data map[string]interface{}, path []interface{}) []string {
 	// See if we have some required-order keys
 	order := ordering(path)
 
