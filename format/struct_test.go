@@ -1,6 +1,7 @@
 package format
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -28,18 +29,17 @@ var s Struct = Struct{
 		},
 	},
 }
+var paths = [][]interface{}{
+	{},
+	{"foo"},
+	{"baz"},
+	{"baz", "quux"},
+	{"baz", "quux", 0},
+	{"baz", "xyzzy"},
+	{"baz", "ipsum"},
+}
 
 func TestGetComment(t *testing.T) {
-	cases := [][]interface{}{
-		{},
-		{"foo"},
-		{"baz"},
-		{"baz", "quux"},
-		{"baz", "quux", 0},
-		{"baz", "xyzzy"},
-		{"baz", "ipsum"},
-	}
-
 	expecteds := []string{
 		"Root comment",
 		"This is foo",
@@ -50,10 +50,10 @@ func TestGetComment(t *testing.T) {
 		"",
 	}
 
-	for i, testCase := range cases {
+	for i, path := range paths {
 		expected := expecteds[i]
 
-		actual := s.GetComment(testCase)
+		actual := s.GetComment(path)
 
 		if actual != expected {
 			t.Errorf("%v != %v\n", actual, expected)
@@ -62,16 +62,6 @@ func TestGetComment(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	cases := [][]interface{}{
-		{},
-		{"foo"},
-		{"baz"},
-		{"baz", "quux"},
-		{"baz", "quux", 0},
-		{"baz", "xyzzy"},
-		{"baz", "ipsum"},
-	}
-
 	expecteds := []interface{}{
 		s.Data,
 		s.Data.(map[string]interface{})["foo"],
@@ -82,12 +72,12 @@ func TestGet(t *testing.T) {
 		s.Data.(map[string]interface{})["baz"].(map[string]interface{})["ipsum"],
 	}
 
-	for i, testCase := range cases {
+	for i, path := range paths {
 		expected := expecteds[i]
 
-		actual := s.Get(testCase)
+		actual := s.Get(path)
 
-		if actual != expected {
+		if !reflect.DeepEqual(actual, expected) {
 			t.Errorf("%v != %v\n", actual, expected)
 		}
 	}

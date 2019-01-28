@@ -24,7 +24,14 @@ func (s Struct) GetComment(path []interface{}) string {
 	comment, ok := value.(string)
 
 	if err != nil || !ok {
-		return ""
+		// Try looking for a root comment
+		value, err = get(s.Comments, append(path, ""))
+		comment, ok = value.(string)
+
+		if err != nil || !ok {
+			// Ok, there's no comment
+			return ""
+		}
 	}
 
 	return comment
@@ -35,6 +42,8 @@ func get(data interface{}, path []interface{}) (interface{}, error) {
 
 	for _, part := range path {
 		switch v := value.(type) {
+		case map[interface{}]interface{}:
+			value = v[part]
 		case map[string]interface{}:
 			stringPart, ok := part.(string)
 			if !ok {
