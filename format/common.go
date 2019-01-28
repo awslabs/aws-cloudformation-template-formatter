@@ -78,3 +78,20 @@ func formatString(data string) string {
 
 	return data
 }
+
+func getFromPath(data map[string]interface{}, path []interface{}) interface{} {
+	value := interface{}(data)
+
+	for _, part := range path {
+		switch v := value.(type) {
+		case map[string]interface{}:
+			value = v[part.(string)]
+		case []interface{}:
+			value = v[part.(int)]
+		default:
+			panic(fmt.Sprintf("Something has gone wrong with the path: %v\n", path))
+		}
+	}
+
+	return value
+}

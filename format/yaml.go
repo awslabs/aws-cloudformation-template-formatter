@@ -27,30 +27,12 @@ func newYamlParser(data map[string]interface{}) yamlParser {
 
 func (p *yamlParser) push(key interface{}) {
 	p.path = append(p.path, key)
-	p.currentValue = p.get()
+	p.currentValue = getFromPath(p.data, p.path)
 }
 
 func (p *yamlParser) pop() {
 	p.path = p.path[:len(p.path)-1]
-	p.currentValue = p.get()
-}
-
-// TODO: Move this to common
-func (p yamlParser) get() interface{} {
-	currentValue := interface{}(p.data)
-
-	for _, part := range p.path {
-		switch v := currentValue.(type) {
-		case map[string]interface{}:
-			currentValue = v[part.(string)]
-		case []interface{}:
-			currentValue = v[part.(int)]
-		default:
-			panic(fmt.Sprintf("Something has gone wrong with the path: %v\n", p.path))
-		}
-	}
-
-	return currentValue
+	p.currentValue = getFromPath(p.data, p.path)
 }
 
 func (p yamlParser) formatIntrinsic(key string) string {
@@ -61,7 +43,7 @@ func (p yamlParser) formatIntrinsic(key string) string {
 
 	fmtValue := p.format()
 
-	switch p.get().(type) {
+	switch p.currentValue.(type) {
 	case map[string]interface{}, []interface{}:
 		return fmt.Sprintf("!%s\n  %s", shortKey, indent(fmtValue))
 	default:
