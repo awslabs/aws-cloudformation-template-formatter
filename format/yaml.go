@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-type yamlParser struct {
+type formatter struct {
+	style          string
 	data           map[string]interface{}
 	comments       map[string]interface{}
 	path           []interface{}
@@ -13,8 +14,9 @@ type yamlParser struct {
 	currentComment interface{}
 }
 
-func newYamlParserWithComments(data, comments map[string]interface{}) yamlParser {
-	return yamlParser{
+func newFormatterWithComments(style string, data, comments map[string]interface{}) formatter {
+	return formatter{
+		style,
 		data,
 		comments,
 		make([]interface{}, 0),
@@ -23,23 +25,23 @@ func newYamlParserWithComments(data, comments map[string]interface{}) yamlParser
 	}
 }
 
-func newYamlParser(data map[string]interface{}) yamlParser {
-	return newYamlParserWithComments(data, nil)
+func newFormatter(style string, data map[string]interface{}) formatter {
+	return newFormatterWithComments(style, data, nil)
 }
 
-func (p *yamlParser) push(key interface{}) {
+func (p *formatter) push(key interface{}) {
 	p.path = append(p.path, key)
 	p.currentValue = mustGetFromPath(p.data, p.path)
 	p.currentComment = getFromPath(p.comments, p.path)
 }
 
-func (p *yamlParser) pop() {
+func (p *formatter) pop() {
 	p.path = p.path[:len(p.path)-1]
 	p.currentValue = mustGetFromPath(p.data, p.path)
 	p.currentComment = getFromPath(p.comments, p.path)
 }
 
-func (p yamlParser) formatIntrinsic(key string) string {
+func (p formatter) formatIntrinsic(key string) string {
 	p.push(key)
 	defer p.pop()
 
@@ -55,7 +57,7 @@ func (p yamlParser) formatIntrinsic(key string) string {
 	}
 }
 
-func (p yamlParser) formatMap(data map[string]interface{}) string {
+func (p formatter) formatMap(data map[string]interface{}) string {
 	if len(data) == 0 {
 		return "{}"
 	}
@@ -112,7 +114,7 @@ func (p yamlParser) formatMap(data map[string]interface{}) string {
 	return strings.Join(parts, joiner)
 }
 
-func (p yamlParser) formatList(data []interface{}) string {
+func (p formatter) formatList(data []interface{}) string {
 	if len(data) == 0 {
 		return "[]"
 	}
@@ -130,7 +132,7 @@ func (p yamlParser) formatList(data []interface{}) string {
 	return strings.Join(parts, "\n")
 }
 
-func (p yamlParser) format() string {
+func (p formatter) format() string {
 	switch v := p.currentValue.(type) {
 	case map[string]interface{}:
 		return p.formatMap(v)
@@ -144,9 +146,9 @@ func (p yamlParser) format() string {
 }
 
 func Yaml(data map[string]interface{}) string {
-	return newYamlParser(data).format()
+	return newFormatter("yaml", data).format()
 }
 
 func YamlWithComments(data, comments map[string]interface{}) string {
-	return newYamlParserWithComments(data, comments).format()
+	return newFormatterWithComments("yaml", data, comments).format()
 }
