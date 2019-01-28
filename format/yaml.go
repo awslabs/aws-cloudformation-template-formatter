@@ -6,10 +6,11 @@ import (
 )
 
 type yamlParser struct {
-	data         map[string]interface{}
-	comments     map[string]interface{}
-	path         []interface{}
-	currentValue interface{}
+	data           map[string]interface{}
+	comments       map[string]interface{}
+	path           []interface{}
+	currentValue   interface{}
+	currentComment interface{}
 }
 
 func newYamlParserWithComments(data, comments map[string]interface{}) yamlParser {
@@ -18,6 +19,7 @@ func newYamlParserWithComments(data, comments map[string]interface{}) yamlParser
 		comments,
 		make([]interface{}, 0),
 		data,
+		comments,
 	}
 }
 
@@ -27,12 +29,14 @@ func newYamlParser(data map[string]interface{}) yamlParser {
 
 func (p *yamlParser) push(key interface{}) {
 	p.path = append(p.path, key)
-	p.currentValue = getFromPath(p.data, p.path)
+	p.currentValue = mustGetFromPath(p.data, p.path)
+	p.currentComment = getFromPath(p.comments, p.path)
 }
 
 func (p *yamlParser) pop() {
 	p.path = p.path[:len(p.path)-1]
-	p.currentValue = getFromPath(p.data, p.path)
+	p.currentValue = mustGetFromPath(p.data, p.path)
+	p.currentComment = getFromPath(p.comments, p.path)
 }
 
 func (p yamlParser) formatIntrinsic(key string) string {
@@ -65,23 +69,33 @@ func (p yamlParser) formatMap(data map[string]interface{}) string {
 
 		p.push(key)
 		fmtValue := p.format()
+		needsIndent := false
 
 		switch v := value.(type) {
 		case map[string]interface{}:
 			if iKey, ok := intrinsicKey(v); ok {
 				fmtValue = p.formatIntrinsic(iKey)
-				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
 			} else {
-				fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
+				needsIndent = true
 			}
 		case []interface{}:
-			if fmtValue == "[]" {
-				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
+			if fmtValue != "[]" {
+				needsIndent = true
+			}
+		}
+
+		if needsIndent {
+			if p.currentComment != nil {
+				fmtValue = fmt.Sprintf("%s:  # %s\n  %s", key, p.currentComment, indent(fmtValue))
 			} else {
 				fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
 			}
-		default:
-			fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
+		} else {
+			if p.currentComment != nil {
+				fmtValue = fmt.Sprintf("%s: %s  # %s", key, fmtValue, p.currentComment)
+			} else {
+				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
+			}
 		}
 
 		parts[i] = fmtValue
