@@ -85,14 +85,14 @@ func (p yamlParser) formatMap(data map[string]interface{}) string {
 		}
 
 		if needsIndent {
-			if p.currentComment != nil {
-				fmtValue = fmt.Sprintf("%s:  # %s\n  %s", key, p.currentComment, indent(fmtValue))
+			if comment, ok := p.currentComment.(string); ok {
+				fmtValue = fmt.Sprintf("%s:  # %s\n  %s", key, comment, indent(fmtValue))
 			} else {
 				fmtValue = fmt.Sprintf("%s:\n  %s", key, indent(fmtValue))
 			}
 		} else {
-			if p.currentComment != nil {
-				fmtValue = fmt.Sprintf("%s: %s  # %s", key, fmtValue, p.currentComment)
+			if comment, ok := p.currentComment.(string); ok {
+				fmtValue = fmt.Sprintf("%s: %s  # %s", key, fmtValue, comment)
 			} else {
 				fmtValue = fmt.Sprintf("%s: %s", key, fmtValue)
 			}

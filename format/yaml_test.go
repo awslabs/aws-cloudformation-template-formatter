@@ -288,20 +288,31 @@ func TestStrings(t *testing.T) {
 }
 
 func TestComments(t *testing.T) {
-	dataCases := []map[string]interface{}{
-		{"foo": "bar"},
+	data := map[string]interface{}{
+		"foo": "bar",
+		"baz": map[string]interface{}{
+			"quux": "mooz",
+		},
+		"xyzzy": []interface{}{
+			"lorem",
+		},
 	}
 
 	commentCases := []map[string]interface{}{
+		{},
 		{"foo": "This is bar"},
+		{"baz": "This is baz"},
+		{"baz": map[string]interface{}{"quux": "This is quux"}},
 	}
 
 	expecteds := []string{
-		"foo: bar  # This is bar",
+		"baz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
+		"baz:\n  quux: mooz\n\nfoo: bar  # This is bar\n\nxyzzy:\n  - lorem",
+		"baz:  # This is baz\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
+		"baz:\n  quux: mooz  # This is quux\n\nfoo: bar\n\nxyzzy:\n  - lorem",
 	}
 
-	for i, data := range dataCases {
-		comments := commentCases[i]
+	for i, comments := range commentCases {
 		expected := expecteds[i]
 
 		actual := YamlWithComments(data, comments)
