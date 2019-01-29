@@ -213,19 +213,3 @@ func (p formatter) format() string {
 		return fmt.Sprint(v)
 	}
 }
-
-func Yaml(data map[string]interface{}) string {
-	return newFormatter("yaml", data).format()
-}
-
-func YamlWithComments(data interface{}, comments map[interface{}]interface{}) string {
-	return newFormatterWithComments("yaml", data, comments).format()
-}
-
-func Json(data map[string]interface{}) string {
-	return newFormatter("json", data).format()
-}
-
-func JsonWithComments(data interface{}, comments map[interface{}]interface{}) string {
-	return newFormatterWithComments("json", data, comments).format()
-}
