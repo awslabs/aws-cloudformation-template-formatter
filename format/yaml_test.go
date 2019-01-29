@@ -287,7 +287,7 @@ func TestStrings(t *testing.T) {
 	}
 }
 
-func TestComments(t *testing.T) {
+func TestYamlComments(t *testing.T) {
 	data := map[string]interface{}{
 		"foo": "bar",
 		"baz": map[string]interface{}{
@@ -298,11 +298,12 @@ func TestComments(t *testing.T) {
 		},
 	}
 
-	commentCases := []map[string]interface{}{
+	commentCases := []map[interface{}]interface{}{
 		{},
 		{"foo": "This is bar"},
 		{"baz": "This is baz"},
 		{"baz": map[string]interface{}{"quux": "This is quux"}},
+		// FIXME: Add a case for commenting on an element in a list
 	}
 
 	expecteds := []string{

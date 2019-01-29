@@ -4,34 +4,6 @@ import (
 	"testing"
 )
 
-func TestIndent(t *testing.T) {
-	cases := []string{
-		"foo",
-		"  bar  ",
-		"foo\nbar",
-		"foo\nbar\n",
-		"\nfoo\n  bar  \nquux",
-	}
-
-	expecteds := []string{
-		"foo",
-		"bar  ",
-		"foo\n  bar",
-		"foo\n  bar\n",
-		"\n  foo\n    bar  \n  quux",
-	}
-
-	for i, testCase := range cases {
-		expected := expecteds[i]
-
-		actual := indent(testCase)
-
-		if actual != expected {
-			t.Errorf("%q != %q\n", actual, expected)
-		}
-	}
-}
-
 func TestIntrinsicKeys(t *testing.T) {
 	cases := []map[string]interface{}{
 		{"foo": "bar"},

@@ -7,18 +7,6 @@ import (
 	"strings"
 )
 
-func indent(in string) string {
-	parts := strings.Split(in, "\n")
-
-	for i, part := range parts {
-		if len(part) > 0 {
-			parts[i] = "  " + part
-		}
-	}
-
-	return strings.TrimLeft(strings.Join(parts, "\n"), " ")
-}
-
 func sortKeys(data map[string]interface{}, path []interface{}) []string {
 	// See if we have some required-order keys
 	order := ordering(path)
