@@ -174,19 +174,19 @@ func TestCfnYaml(t *testing.T) {
 
 func TestIntrinsicKey(t *testing.T) {
 	cases := []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"Ref": "foo",
 		},
-		map[string]interface{}{
+		{
 			"Fn::Sub": "The cake is a lie",
 		},
-		map[string]interface{}{
+		{
 			"Fn::NotARealFn": "This is not real but we'll take it",
 		},
-		map[string]interface{}{
+		{
 			"Func::Join": "joined",
 		},
-		map[string]interface{}{
+		{
 			"NoFunc": "Not a func for sure!",
 		},
 	}

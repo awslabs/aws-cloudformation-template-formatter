@@ -24,7 +24,7 @@ func sortKeys(data map[string]interface{}, path []interface{}) []string {
 	}
 
 	// Now the remainder of the keys
-	for key, _ := range data {
+	for key := range data {
 		if !done[key] {
 			otherKeys = append(otherKeys, key)
 		}

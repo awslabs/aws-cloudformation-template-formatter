@@ -7,7 +7,7 @@ import (
 
 type formatter struct {
 	style          string
-	data           Struct
+	data           value
 	path           []interface{}
 	currentValue   interface{}
 	currentComment string
@@ -16,7 +16,7 @@ type formatter struct {
 func newFormatterWithComments(style string, data interface{}, comments map[interface{}]interface{}) formatter {
 	p := formatter{
 		style: style,
-		data: Struct{
+		data: value{
 			data,
 			comments,
 		},
@@ -178,7 +178,7 @@ func (p formatter) formatList(data []interface{}) string {
 
 	parts := make([]string, len(data))
 
-	for i, _ := range data {
+	for i := range data {
 		p.push(i)
 		fmtValue := p.format()
 		p.pop()
