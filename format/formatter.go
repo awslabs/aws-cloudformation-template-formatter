@@ -154,18 +154,18 @@ func (p formatter) formatMap(data map[string]interface{}) string {
 		p.pop()
 	}
 
-	if p.style == "json" {
-		if p.currentComment != "" {
-			return "{  // " + p.currentComment + "\n" + p.indent(strings.Join(parts, "\n")) + "\n}"
-		}
-
-		return "{\n" + p.indent(strings.Join(parts, "\n")) + "\n}"
-	}
-
+	// Double gap for top-level elements
 	joiner := "\n"
-
 	if len(p.path) <= 1 {
 		joiner = "\n\n"
+	}
+
+	if p.style == "json" {
+		if p.currentComment != "" {
+			return "{  // " + p.currentComment + "\n" + p.indent(strings.Join(parts, joiner)) + "\n}"
+		}
+
+		return "{\n" + p.indent(strings.Join(parts, joiner)) + "\n}"
 	}
 
 	return strings.Join(parts, joiner)

@@ -160,7 +160,7 @@ func TestCfnJson(t *testing.T) {
 	}
 
 	expecteds := []string{
-		"{\n    \"Parameters\": \"baz\",\n    \"Resources\": \"xyzzy\",\n    \"Foo\": \"bar\",\n    \"Quux\": \"mooz\"\n}",
+		"{\n    \"Parameters\": \"baz\",\n\n    \"Resources\": \"xyzzy\",\n\n    \"Foo\": \"bar\",\n\n    \"Quux\": \"mooz\"\n}",
 	}
 
 	for i, testCase := range cases {
@@ -193,10 +193,10 @@ func TestJsonComments(t *testing.T) {
 	}
 
 	expecteds := []string{
-		"{\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n    \"foo\": \"bar\",\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
-		"{\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n    \"foo\": \"bar\",  // This is bar\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
-		"{\n    \"baz\": {  // This is baz\n        \"quux\": \"mooz\"\n    },\n    \"foo\": \"bar\",\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
-		"{\n    \"baz\": {\n        \"quux\": \"mooz\"  // This is quux\n    },\n    \"foo\": \"bar\",\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
+		"{\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
+		"{\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",  // This is bar\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
+		"{\n    \"baz\": {  // This is baz\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
+		"{\n    \"baz\": {\n        \"quux\": \"mooz\"  // This is quux\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
 	}
 
 	for i, comments := range commentCases {
