@@ -181,16 +181,29 @@ func (p formatter) formatList(data []interface{}) string {
 	for i := range data {
 		p.push(i)
 		fmtValue := p.format()
-		p.pop()
 
 		if p.style == "json" {
 			parts[i] = p.indent(fmtValue)
 		} else {
 			parts[i] = fmt.Sprintf("- %s", p.indent(fmtValue))
 		}
+
+		if p.currentComment != "" {
+			if p.style == "json" {
+				parts[i] += "  // " + p.currentComment
+			} else {
+				parts[i] += "  # " + p.currentComment
+			}
+		}
+
+		p.pop()
 	}
 
 	if p.style == "json" {
+		if p.currentComment != "" {
+			return "[  // " + p.currentComment + "\n" + strings.Join(parts, ",\n") + "\n]"
+		}
+
 		return "[\n" + strings.Join(parts, ",\n") + "\n]"
 	}
 

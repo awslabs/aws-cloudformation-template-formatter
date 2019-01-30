@@ -300,17 +300,24 @@ func TestYamlComments(t *testing.T) {
 
 	commentCases := []map[interface{}]interface{}{
 		{},
-		{"foo": "This is bar"},
+		{"foo": "This is foo"},
 		{"baz": "This is baz"},
+		{"baz": map[string]interface{}{"": "This is also baz"}},
 		{"baz": map[string]interface{}{"quux": "This is quux"}},
-		// FIXME: Add a case for commenting on an element in a list
+		{"xyzzy": "This is xyzzy"},
+		{"xyzzy": map[string]interface{}{"": "This is also xyzzy"}},
+		{"xyzzy": map[interface{}]interface{}{0: "This is lorem"}}, // BUGGGGGGG
 	}
 
 	expecteds := []string{
 		"baz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
-		"baz:\n  quux: mooz\n\nfoo: bar  # This is bar\n\nxyzzy:\n  - lorem",
+		"baz:\n  quux: mooz\n\nfoo: bar  # This is foo\n\nxyzzy:\n  - lorem",
 		"baz:  # This is baz\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
+		"baz:  # This is also baz\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
 		"baz:\n  quux: mooz  # This is quux\n\nfoo: bar\n\nxyzzy:\n  - lorem",
+		"baz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:  # This is xyzzy\n  - lorem",
+		"baz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:  # This is also xyzzy\n  - lorem",
+		"baz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem  # This is lorem",
 	}
 
 	for i, comments := range commentCases {
