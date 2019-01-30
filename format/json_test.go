@@ -34,7 +34,6 @@ func TestJsonScalars(t *testing.T) {
 	}
 }
 
-/*
 func TestJsonList(t *testing.T) {
 	cases := []map[string]interface{}{
 		{"foo": []interface{}{}},
@@ -75,10 +74,10 @@ func TestJsonList(t *testing.T) {
 	expecteds := []string{
 		"{\n    \"foo\": []\n}",
 		"{\n    \"foo\": [\n        1\n    ]\n}",
-		"{\n    \"foo\": [\n    1\n  - foo\n  - true",
-		"{\n    \"foo\": [\n    - foo\n    - bar\n  - baz",
-		"{\n    \"foo\": [\n    - - foo\n      - bar\n    - baz\n  - quux",
-		"{\n    \"foo\": [\n    foo: bar\n  - baz: quux\n    mooz: xyzzy",
+		"{\n    \"foo\": [\n        1,\n        \"foo\",\n        true\n    ]\n}",
+		"{\n    \"foo\": [\n        [\n            \"foo\",\n            \"bar\"\n        ],\n        \"baz\"\n    ]\n}",
+		"{\n    \"foo\": [\n        [\n            [\n                \"foo\",\n                \"bar\"\n            ],\n            \"baz\"\n        ],\n        \"quux\"\n    ]\n}",
+		"{\n    \"foo\": [\n        {\n            \"foo\": \"bar\"\n        },\n        {\n            \"baz\": \"quux\",\n            \"mooz\": \"xyzzy\"\n        }\n    ]\n}",
 	}
 
 	for i, testCase := range cases {
@@ -87,7 +86,7 @@ func TestJsonList(t *testing.T) {
 		actual := Json(testCase)
 
 		if actual != expected {
-			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+			t.Errorf("\n%v\n  is not\n%v\n", actual, expected)
 		}
 	}
 }
@@ -130,11 +129,11 @@ func TestJsonMap(t *testing.T) {
 
 	expecteds := []string{
 		"{}",
-		"foo: bar",
-		"baz: quux\n\nfoo: bar",
-		"foo:\n  bar: baz\n\nquux: mooz",
-		"alpha: beta\n\nfoo:\n  bar:\n    baz: quux\n\n  mooz: xyzzy",
-		"foo:\n  - bar\n  - baz\n\nquux:\n  - mooz",
+		"{\n    \"foo\": \"bar\"\n}",
+		"{\n    \"baz\": \"quux\",\n\n    \"foo\": \"bar\"\n}",
+		"{\n    \"foo\": {\n        \"bar\": \"baz\"\n    },\n\n    \"quux\": \"mooz\"\n}",
+		"{\n    \"alpha\": \"beta\",\n\n    \"foo\": {\n        \"bar\": {\n            \"baz\": \"quux\"\n        },\n\n        \"mooz\": \"xyzzy\"\n    }\n}",
+		"{\n    \"foo\": [\n        \"bar\",\n        \"baz\"\n    ],\n\n    \"quux\": [\n        \"mooz\"\n    ]\n}",
 	}
 
 	for i, testCase := range cases {
@@ -143,11 +142,10 @@ func TestJsonMap(t *testing.T) {
 		actual := Json(testCase)
 
 		if actual != expected {
-			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+			t.Errorf("\n%v\n---IS NOT---\n%v\n", actual, expected)
 		}
 	}
 }
-*/
 
 func TestCfnJson(t *testing.T) {
 	cases := []map[string]interface{}{
