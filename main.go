@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"./format"
+	"github.com/awslabs/aws-cloudformation-template-formatter/format"
 
 	"encoding/json"
 
