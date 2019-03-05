@@ -36,7 +36,7 @@ documentation.
 
 For each function, CloudFormation templates should be represented using
 a `map[string]interface{}` as output by other libraries that parse
-JSON/YAML such as github.com/awslabs/goformation and encoding/json.
+JSON/YAML such as `github.com/awslabs/goformation` and `encoding/json`.
 
 Comments can be passed along with the template data in the following
 format:
