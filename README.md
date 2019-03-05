@@ -8,7 +8,7 @@ This project is licensed under the Apache 2.0 License.
 
 ## Usage
 
-To use `cfn-format`, you can clone this repository and run `go build` or download the [latest release](https://github.com/awslabs/aws-cloudformation-template-formatter/releases) for your operating system.
+To use `cfn-format`, you can clone this repository and run `go build` or download the [latest release](https://github.com/awslabs/aws-cloudformation-template-formatter/releases/latest) for your operating system.
 
 ### Command-line tool
 
