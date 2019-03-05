@@ -185,6 +185,7 @@ func TestJsonComments(t *testing.T) {
 
 	commentCases := []map[interface{}]interface{}{
 		{},
+		{"": "Top-level comment"},
 		{"foo": "This is foo"},
 		{"baz": "This is baz"},
 		{"baz": map[string]interface{}{"": "This is also baz"}},
@@ -196,6 +197,7 @@ func TestJsonComments(t *testing.T) {
 
 	expecteds := []string{
 		"{\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
+		"{  // Top-level comment\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
 		"{\n    \"baz\": {\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",  // This is foo\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
 		"{\n    \"baz\": {  // This is baz\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",
 		"{\n    \"baz\": {  // This is also baz\n        \"quux\": \"mooz\"\n    },\n\n    \"foo\": \"bar\",\n\n    \"xyzzy\": [\n        \"lorem\"\n    ]\n}",

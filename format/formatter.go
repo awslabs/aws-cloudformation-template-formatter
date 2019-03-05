@@ -168,7 +168,14 @@ func (p formatter) formatMap(data map[string]interface{}) string {
 		return "{\n" + p.indent(strings.Join(parts, joiner)) + "\n}"
 	}
 
-	return strings.Join(parts, joiner)
+	output := strings.Join(parts, joiner)
+
+	// Add a top-level comment for yaml
+	if p.currentComment != "" && len(p.path) == 0 {
+		output = "# " + p.currentComment + "\n" + output
+	}
+
+	return output
 }
 
 func (p formatter) formatList(data []interface{}) string {

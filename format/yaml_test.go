@@ -300,6 +300,7 @@ func TestYamlComments(t *testing.T) {
 
 	commentCases := []map[interface{}]interface{}{
 		{},
+		{"": "Top-level comments"},
 		{"foo": "This is foo"},
 		{"baz": "This is baz"},
 		{"baz": map[string]interface{}{"": "This is also baz"}},
@@ -311,6 +312,7 @@ func TestYamlComments(t *testing.T) {
 
 	expecteds := []string{
 		"baz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
+		"# Top-level comments\nbaz:\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
 		"baz:\n  quux: mooz\n\nfoo: bar  # This is foo\n\nxyzzy:\n  - lorem",
 		"baz:  # This is baz\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
 		"baz:  # This is also baz\n  quux: mooz\n\nfoo: bar\n\nxyzzy:\n  - lorem",
