@@ -27,7 +27,7 @@ Options:
 ### Go package documentation
 
 ```go
-import "./format/"
+import "github.com/awslabs/aws-cloudformation-template-formatter/format"
 ```
 
 Package format provides functions for formatting CloudFormation
