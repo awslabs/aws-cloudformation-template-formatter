@@ -11,3 +11,11 @@
     * e.g. IAM policies
 
 * Find some more things to put on the to do list
+
+* vim plugin
+
+* VSCode plugin
+
+* Comment-preserving JSON/YAML parser
+
+* Full functional test suite against everything in <https://github.com/awslabs/aws-cloudformation-templates>
