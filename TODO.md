@@ -17,5 +17,3 @@
 * VSCode plugin
 
 * Comment-preserving JSON/YAML parser
-
-* Full functional test suite against everything in <https://github.com/awslabs/aws-cloudformation-templates>
