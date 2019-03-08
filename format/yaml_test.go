@@ -9,6 +9,9 @@ func TestYamlScalars(t *testing.T) {
 		{"foo": 1},
 		{"foo": 1.0},
 		{"foo": 1.234},
+		{"foo": "32"},
+		{"foo": "032"},
+		{"foo": "32.0"},
 		{"foo": "hello"},
 		{"foo": true},
 		{"foo": false},
@@ -18,6 +21,9 @@ func TestYamlScalars(t *testing.T) {
 		"foo: 1",
 		"foo: 1",
 		"foo: 1.234",
+		"foo: \"32\"",
+		"foo: \"032\"",
+		"foo: \"32.0\"",
 		"foo: hello",
 		"foo: true",
 		"foo: false",
@@ -125,6 +131,11 @@ func TestYamlMap(t *testing.T) {
 				"mooz",
 			},
 		},
+		{
+			"32": map[string]interface{}{
+				"64": "Numeric key",
+			},
+		},
 	}
 
 	expecteds := []string{
@@ -134,6 +145,7 @@ func TestYamlMap(t *testing.T) {
 		"foo:\n  bar: baz\n\nquux: mooz",
 		"alpha: beta\n\nfoo:\n  bar:\n    baz: quux\n\n  mooz: xyzzy",
 		"foo:\n  - bar\n  - baz\n\nquux:\n  - mooz",
+		"\"32\":\n  \"64\": Numeric key",
 	}
 
 	for i, testCase := range cases {

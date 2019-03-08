@@ -55,7 +55,10 @@ func formatString(data string) string {
 	case strings.ContainsAny(data, "\n"),
 		data == "",
 		data == "Yes" || data == "No",
-		strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@`\"'[{: -\\"),
+		data == "true" || data == "false",
+		data == "True" || data == "False",
+		strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@`\"'[{}]:-\\ \t\n"),
+		strings.ContainsAny(string(data[len(data)-1]), " \t\n"),
 		strings.ContainsAny(data, "`\"'"):
 		quote = true
 	}

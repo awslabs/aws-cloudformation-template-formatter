@@ -121,6 +121,9 @@ func (p formatter) formatMap(data map[string]interface{}) string {
 		} else {
 			needsIndent := false
 
+			// CloudFormation requires string keys
+			key = formatString(key)
+
 			switch v := value.(type) {
 			case map[string]interface{}:
 				if iKey, ok := intrinsicKey(v); ok {
