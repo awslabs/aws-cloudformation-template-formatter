@@ -1,0 +1,25 @@
+base: core18
+
+name: cfn-format
+version: git
+summary: Formats AWS CloudFormation templates.
+description: >
+  cfn-format is a command line tool that reads an existing AWS CloudFormation template
+  and outputs a cleanly-formatted, easy-to-read copy of the same template
+  adhering to standards as used in AWS documentation.
+  cfn-format can output either YAML or JSON as desired.
+
+grade: devel
+confinement: devmode
+
+parts:
+  cfn-format:
+    build-packages:
+      - gcc
+    source: .
+    plugin: go
+    go-importpath: github.com/awslabs/aws-cloudformation-template-formatter
+
+apps:
+  cfn-format:
+    command: aws-cloudformation-template-formatter
