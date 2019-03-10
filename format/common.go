@@ -57,9 +57,9 @@ func formatString(data string) string {
 		data == "Yes" || data == "No",
 		data == "true" || data == "false",
 		data == "True" || data == "False",
-		strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@`\"'[{}]:-\\ \t\n"),
+		strings.ContainsAny(string(data[0]), "0123456789!&*?,#|>@[{}]-\\ \t\n"),
 		strings.ContainsAny(string(data[len(data)-1]), " \t\n"),
-		strings.ContainsAny(data, "`\"'"):
+		strings.ContainsAny(data, "`\"':"):
 		quote = true
 	}
 
