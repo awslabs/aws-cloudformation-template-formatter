@@ -1,19 +1,27 @@
 # To do
 
+## Refactoring
+
+* Create a Template model with functions for ToJson and ToYaml
+
+* Change the output from string to []byte
+
+* Make `common.go` a bit more intuitive to maintain
+
+## Improvements
+
 * Order resources based on dependencies between them
 
 * Add long/multi-line string handling
-
-* Make `common.go` a bit more intuitive to maintain
 
 * deal with ordering in more resource types
 
     * e.g. IAM policies
 
-* Find some more things to put on the to do list
+## Features
 
 * vim plugin
 
 * VSCode plugin
 
-* Comment-preserving JSON/YAML parser
+* Use a comment-preserving JSON/YAML parser
