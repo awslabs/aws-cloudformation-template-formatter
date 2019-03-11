@@ -76,7 +76,7 @@ func main() {
 	}
 
 	if verify {
-		err := util.VerifyOutput(source, output)
+		err := util.VerifyOutput(source, []byte(output))
 		if err != nil {
 			die(err.Error())
 		}
