@@ -6,7 +6,7 @@ import (
 	"github.com/awslabs/aws-cloudformation-template-formatter/util"
 )
 
-const inputTemplate = `
+var inputTemplate = []byte(`
 Outputs:
   Cake:
     Value: Lie
@@ -19,14 +19,14 @@ Parameters:
   Suffix:
     Default: ""
     Type: String
-`
+`)
 
 var source map[string]interface{}
 
 func init() {
 	var err error
 
-	source, err = util.ReadString(inputTemplate)
+	source, err = util.ReadBytes(inputTemplate)
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +49,7 @@ func BenchmarkVerifyJson(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		util.VerifyOutput(source, output)
+		util.VerifyOutput(source, []byte(output))
 	}
 }
 
@@ -58,6 +58,6 @@ func BenchmarkVerifyYaml(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		util.VerifyOutput(source, output)
+		util.VerifyOutput(source, []byte(output))
 	}
 }
