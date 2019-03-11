@@ -1,4 +1,4 @@
-package util
+package parse
 
 import (
 	"encoding/json"
@@ -48,11 +48,11 @@ func ReadFile(fileName string) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("Unable to read file: %s", err)
 	}
 
-	return ReadBytes(source)
+	return ReadString(string(source))
 }
 
-func ReadBytes(input []byte) (map[string]interface{}, error) {
-	parsed, err := yamlwrapper.YAMLToJSON(input)
+func ReadString(input string) (map[string]interface{}, error) {
+	parsed, err := yamlwrapper.YAMLToJSON([]byte(input))
 	if err != nil {
 		return nil, fmt.Errorf("Invalid YAML: %s", err)
 	}
@@ -66,9 +66,9 @@ func ReadBytes(input []byte) (map[string]interface{}, error) {
 	return output, nil
 }
 
-func VerifyOutput(source map[string]interface{}, output []byte) error {
+func VerifyOutput(source map[string]interface{}, output string) error {
 	// Check it matches the original
-	validate, err := ReadBytes(output)
+	validate, err := ReadString(output)
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/awslabs/aws-cloudformation-template-formatter/format"
-	"github.com/awslabs/aws-cloudformation-template-formatter/util"
+	"github.com/awslabs/aws-cloudformation-template-formatter/parse"
 )
 
 var usage = `Usage: cfn-format [-j] <filename>
@@ -62,7 +62,7 @@ func main() {
 	}
 
 	// Read the source template
-	source, err := util.ReadFile(fileName)
+	source, err := parse.ReadFile(fileName)
 	if err != nil {
 		die(err.Error())
 	}
@@ -76,7 +76,7 @@ func main() {
 	}
 
 	if verify {
-		err := util.VerifyOutput(source, []byte(output))
+		err := parse.VerifyOutput(source, output)
 		if err != nil {
 			die(err.Error())
 		}

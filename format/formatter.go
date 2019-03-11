@@ -13,7 +13,7 @@ type formatter struct {
 	currentComment string
 }
 
-func newFormatterWithComments(style string, data interface{}, comments map[interface{}]interface{}) formatter {
+func newFormatter(style string, data interface{}, comments map[interface{}]interface{}) formatter {
 	p := formatter{
 		style: style,
 		data: value{
@@ -26,10 +26,6 @@ func newFormatterWithComments(style string, data interface{}, comments map[inter
 	p.get()
 
 	return p
-}
-
-func newFormatter(style string, data map[string]interface{}) formatter {
-	return newFormatterWithComments(style, data, nil)
 }
 
 func (p *formatter) get() {

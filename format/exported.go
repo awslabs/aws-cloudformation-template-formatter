@@ -28,22 +28,22 @@ package format
 
 // Yaml formats the CloudFormation template as a Yaml string
 func Yaml(data map[string]interface{}) string {
-	return newFormatter("yaml", data).format()
+	return YamlWithComments(data, nil)
 }
 
 // YamlWithComments formats the CloudFormation template
 // as a Yaml string with comments as provided
 func YamlWithComments(data map[string]interface{}, comments map[interface{}]interface{}) string {
-	return newFormatterWithComments("yaml", data, comments).format()
+	return newFormatter("yaml", data, comments).format()
 }
 
 // Json formats the CloudFormation template as a Json string
 func Json(data map[string]interface{}) string {
-	return newFormatter("json", data).format()
+	return JsonWithComments(data, nil)
 }
 
 // JsonWithComments formats the CloudFormation template
 // as a Json string with comments as provided
 func JsonWithComments(data map[string]interface{}, comments map[interface{}]interface{}) string {
-	return newFormatterWithComments("json", data, comments).format()
+	return newFormatter("json", data, comments).format()
 }

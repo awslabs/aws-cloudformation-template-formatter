@@ -3,10 +3,10 @@ package format
 import (
 	"testing"
 
-	"github.com/awslabs/aws-cloudformation-template-formatter/util"
+	"github.com/awslabs/aws-cloudformation-template-formatter/parse"
 )
 
-var inputTemplate = []byte(`
+var inputTemplate = `
 Outputs:
   Cake:
     Value: Lie
@@ -19,14 +19,14 @@ Parameters:
   Suffix:
     Default: ""
     Type: String
-`)
+`
 
 var source map[string]interface{}
 
 func init() {
 	var err error
 
-	source, err = util.ReadBytes(inputTemplate)
+	source, err = parse.ReadString(inputTemplate)
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +49,7 @@ func BenchmarkVerifyJson(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		util.VerifyOutput(source, []byte(output))
+		parse.VerifyOutput(source, output)
 	}
 }
 
@@ -58,6 +58,6 @@ func BenchmarkVerifyYaml(b *testing.B) {
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		util.VerifyOutput(source, []byte(output))
+		parse.VerifyOutput(source, output)
 	}
 }
