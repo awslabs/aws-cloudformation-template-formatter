@@ -2,6 +2,11 @@
 
 ## Refactoring
 
+* Drop the dependency on goformation and use sanathkr/yaml directly
+
+    This is because we don't want to necessarily validate the template.
+    Some edge cases using intrinsics and not processing them cause failures.
+
 * Create a Template model with functions for ToJson and ToYaml
 
 * Change the output from string to []byte
