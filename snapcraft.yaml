@@ -1,5 +1,3 @@
-base: core18
-
 name: cfn-format
 version: git
 summary: Formats AWS CloudFormation templates.
@@ -9,8 +7,12 @@ description: >
   adhering to standards as used in AWS documentation.
   cfn-format can output either YAML or JSON as desired.
 
+license: Apache-2.0
+
+base: core18
+
 grade: devel
-confinement: devmode
+confinement: strict
 
 parts:
   cfn-format:
