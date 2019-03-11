@@ -1,12 +1,17 @@
 #!/bin/bash
 
-function verify {
-    go run main.go --verify $1 >/dev/null
-    go run main.go --verify -j $1 >/dev/null
-}
+# Build a test binary
+export CFN_FORMAT_TEST_BINARY=$(mktemp)
+go build -o $CFN_FORMAT_TEST_BINARY
 
-export -f verify
+# Get the example templates
+git clone --depth 1 https://github.com/awslabs/aws-cloudformation-templates &>/dev/null
 
-git clone --depth 1 https://github.com/awslabs/aws-cloudformation-templates
-find ./aws-cloudformation-templates -iname *.template -exec bash -c 'verify "$0"' {} \;
-rm -r aws-cloudformation-templates
+# Run the tests
+find ./aws-cloudformation-templates -iname "*.template" -exec ./test_part.sh {} \;
+find ./aws-cloudformation-templates -iname "*.json" -exec ./test_part.sh {} \;
+find ./aws-cloudformation-templates -iname "*.yaml" -exec ./test_part.sh {} \;
+
+# CLean up
+rm -rf aws-cloudformation-templates
+rm $CFN_FORMAT_TEST_BINARY
