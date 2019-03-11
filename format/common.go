@@ -61,7 +61,7 @@ func formatString(data string) string {
 		strings.ToLower(data) == "true",
 		strings.ToLower(data) == "false",
 		strings.ToLower(data) == "null",
-		strings.ContainsAny(string(data[0]), "0123456789!&*?,|>@[{}]-\\ \t\n"),
+		strings.ContainsAny(string(data[0]), "0123456789!&%*?,|>@[{}]-\\ \t\n"),
 		strings.ContainsAny(string(data[len(data)-1]), " \t\n"),
 		strings.ContainsAny(data, "`\"':#"):
 		quote = true

@@ -11,10 +11,24 @@ import (
 	yamlwrapper "github.com/sanathkr/yaml"
 )
 
-var allTags = []string{
-	"Ref", "GetAtt", "Base64", "FindInMap", "GetAZs",
-	"ImportValue", "Join", "Select", "Split", "Sub",
-	"Equals", "Cidr", "And", "If", "Not", "Or",
+var tags = []string{
+	"And",
+	"Base64",
+	"Cidr",
+	"Equals",
+	"FindInMap",
+	"GetAZs",
+	"GetAtt",
+	"If",
+	"ImportValue",
+	"Join",
+	"Not",
+	"Or",
+	"Ref",
+	"Select",
+	"Split",
+	"Sub",
+	"Transform",
 }
 
 type tagUnmarshalerType struct {
@@ -23,7 +37,7 @@ type tagUnmarshalerType struct {
 var tagUnmarshaler = &tagUnmarshalerType{}
 
 func init() {
-	for _, tag := range allTags {
+	for _, tag := range tags {
 		yaml.RegisterTagUnmarshaler("!"+tag, tagUnmarshaler)
 	}
 }
