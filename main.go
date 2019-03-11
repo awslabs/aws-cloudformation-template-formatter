@@ -24,7 +24,7 @@ Options:
 `
 
 func die(message string) {
-	fmt.Fprintf(os.Stderr, message)
+	fmt.Fprintln(os.Stderr, message)
 	os.Exit(1)
 }
 
