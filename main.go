@@ -18,8 +18,6 @@ var usage = `Usage: cfn-format [-j] <filename>
 Options:
   -j        Output the template as JSON (default format: YAML).
   -w        Write the output back to the file rather than to stdout.
-  --verify  Verify that the formatted output is semantically identical to the input.
-            Use this option to guarantee your template has not changed.
   --help    Show this message and exit.
 `
 
@@ -34,7 +32,6 @@ func help() {
 
 func main() {
 	style := "yaml"
-	verify := false
 	write := false
 
 	// Parse options
@@ -46,8 +43,6 @@ func main() {
 		switch arg {
 		case "-j":
 			style = "json"
-		case "--verify":
-			verify = true
 		case "-w":
 			write = true
 		case "-h", "--help":
@@ -75,11 +70,10 @@ func main() {
 		output = format.Yaml(source)
 	}
 
-	if verify {
-		err := parse.VerifyOutput(source, output)
-		if err != nil {
-			die(err.Error())
-		}
+	// Verify the output is valid
+	err = parse.VerifyOutput(source, output)
+	if err != nil {
+		die(err.Error())
 	}
 
 	if write {
