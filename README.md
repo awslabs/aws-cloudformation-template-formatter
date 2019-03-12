@@ -31,4 +31,4 @@ Options:
 
 **The API for cfn-format will be changing in 1.0.0**
 
-To see the current Go documentation for cfn-format, please check <format/exported.go>.
+To see the current Go documentation for cfn-format, please check [format/exported.go](https://github.com/awslabs/aws-cloudformation-template-formatter/blob/0.3.0/format/exported.go).
