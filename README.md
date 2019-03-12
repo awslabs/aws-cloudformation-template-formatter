@@ -22,12 +22,13 @@ Usage: cfn-format [-j] <filename>
   used in AWS documentation.
 
 Options:
-  -j      Output the template as JSON (default format: YAML).
-  --help  Show this message and exit.
+  -j        Output the template as JSON (default format: YAML).
+  -w        Write the output back to the file rather than to stdout.
+  --help    Show this message and exit.
 ```
 
 ### Go package documentation
 
 **The API for cfn-format will be changing in 1.0.0**
 
-To see the current Go documentation for cfn-format, please check <format/doc.go>.
+To see the current Go documentation for cfn-format, please check <format/exported.go>.

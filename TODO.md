@@ -2,6 +2,11 @@
 
 ## Refactoring
 
+* Pull out the yaml parsing into cfn-yaml
+
+    Speak to Paul about this idea
+    Submit a PR to goformation to use cfn-yaml
+
 * Make `common.go` a bit more intuitive to maintain
 
 ## Improvements
