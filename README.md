@@ -12,6 +12,12 @@ This project is licensed under the Apache 2.0 License.
 
 To use `cfn-format`, you can clone this repository and run `go build` or download the [latest release](https://github.com/awslabs/aws-cloudformation-template-formatter/releases/latest) for your operating system.
 
+If you're using [vim](https://www.vim.org/), you can add the following to your `.vimrc` to automate running `cfn-format` when you save a `.template` file:
+
+```vim
+autocmd BufWritePost *.template silent !cfn-format -w % 2>/dev/null
+```
+
 ### Command-line tool
 
 ```console
