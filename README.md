@@ -15,16 +15,18 @@ To use `cfn-format`, you can clone this repository and run `go build` or downloa
 ### Command-line tool
 
 ```console
-Usage: cfn-format [-j] <filename>
+Usage: cfn-format [OPTION...] [FILENAME]
 
   AWS CloudFormation Format is a tool that reads a CloudFormation template
   and outputs the same template, formatted according to the same standards
   used in AWS documentation.
 
+  If FILENAME is not supplied, cfn-format will read from STDIN.
+
 Options:
-  -j        Output the template as JSON (default format: YAML).
-  -w        Write the output back to the file rather than to stdout.
   --help    Show this message and exit.
+  -j, --json    Output the template as JSON (default format: YAML).
+  -w, --write   Write the output back to the file rather than to stdout.
 ```
 
 ### Go package documentation

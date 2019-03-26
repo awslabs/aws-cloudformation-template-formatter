@@ -2,6 +2,7 @@ package parse
 
 import (
 	"io/ioutil"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -43,6 +44,17 @@ func init() {
 	}
 
 	testTemplate = string(data)
+}
+
+func TestRead(t *testing.T) {
+	actual, err := Read(strings.NewReader(testTemplate))
+	if err != nil {
+		t.Error(err)
+	}
+
+	if diff := cmp.Diff(actual, expected); diff != "" {
+		t.Errorf(diff)
+	}
 }
 
 func TestReadFile(t *testing.T) {

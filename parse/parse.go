@@ -3,6 +3,7 @@ package parse
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"reflect"
 
@@ -54,6 +55,15 @@ func (t *tagUnmarshalerType) UnmarshalYAMLTag(tag string, value reflect.Value) r
 	output.SetMapIndex(key, value)
 
 	return output
+}
+
+func Read(r io.Reader) (map[string]interface{}, error) {
+	data, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to read input: %s", err)
+	}
+
+	return ReadString(string(data))
 }
 
 func ReadFile(fileName string) (map[string]interface{}, error) {
