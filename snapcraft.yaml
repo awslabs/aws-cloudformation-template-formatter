@@ -16,12 +16,16 @@ confinement: strict
 
 parts:
   cfn-format:
-    build-packages:
-      - gcc
     source: .
     plugin: go
     go-importpath: github.com/awslabs/aws-cloudformation-template-formatter
+    build-packages:
+      - gcc
+    build-snaps:
+      - go
 
 apps:
   cfn-format:
     command: aws-cloudformation-template-formatter
+    plugs:
+      - home
