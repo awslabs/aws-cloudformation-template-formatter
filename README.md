@@ -11,9 +11,19 @@ This repository contains `cfn-format`, a command line tool and Go library that r
 
 This project is licensed under the Apache 2.0 License. 
 
-## Usage
+## Installation
 
-To use `cfn-format`, you can clone this repository and run `go build` or download the [latest release](https://github.com/awslabs/aws-cloudformation-template-formatter/releases/latest) for your operating system.
+You can install `cfn-format` in one of the following three ways:
+
+* Use the [snap package](https://snapcraft.io/cfn-format)
+
+* If you have [go](https://golang.org/) installed, run the following:
+
+    `go install github.com/awslabs/aws-cloudformation-template-formatter/cmd/cfn-format`
+
+* Download the [latest release](https://github.com/awslabs/aws-cloudformation-template-formatter/releases/latest) for your operating system.
+
+## Usage
 
 If you're using [vim](https://www.vim.org/), you can add the following to your `.vimrc` to automate running `cfn-format` when you save a `.template` file:
 
