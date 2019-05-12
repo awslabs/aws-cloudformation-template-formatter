@@ -16,9 +16,11 @@ confinement: strict
 
 parts:
   cfn-format:
-    source: .
     plugin: go
+    source: .
     go-importpath: github.com/awslabs/aws-cloudformation-template-formatter
+    go-packages:
+      - github.com/awslabs/aws-cloudformation-template-formatter/cmd/cfn-format
     build-packages:
       - gcc
     build-snaps:
@@ -26,6 +28,6 @@ parts:
 
 apps:
   cfn-format:
-    command: aws-cloudformation-template-formatter
+    command: cfn-format
     plugs:
       - home
