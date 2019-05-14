@@ -4,6 +4,52 @@ import (
 	"testing"
 )
 
+func TestYamlDirectValues(t *testing.T) {
+	cases := []interface{}{
+		1,
+		"foo",
+		[]interface{}{1, "foo"},
+		map[string]interface{}{"foo": "bar", "baz": "quux"},
+	}
+
+	expecteds := []string{
+		"1",
+		"foo",
+		"- 1\n- foo",
+		"baz: quux\n\nfoo: bar",
+	}
+
+	for i, testCase := range cases {
+		expected := expecteds[i]
+
+		actual := Yaml(testCase)
+
+		if actual != expected {
+			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+		}
+	}
+}
+
+func TestCompactYaml(t *testing.T) {
+	cases := []interface{}{
+		map[string]interface{}{"foo": "bar", "baz": "quux"},
+	}
+
+	expecteds := []string{
+		"baz: quux\nfoo: bar",
+	}
+
+	for i, testCase := range cases {
+		expected := expecteds[i]
+
+		actual := newEncoder(Formatter{YAML, true}, value{testCase, nil}).format()
+
+		if actual != expected {
+			t.Errorf("from %T %v:\n%#v != %#v\n", testCase, testCase, actual, expected)
+		}
+	}
+}
+
 func TestYamlScalars(t *testing.T) {
 	cases := []map[string]interface{}{
 		{"foo": 1},

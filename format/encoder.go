@@ -5,22 +5,19 @@ import (
 	"strings"
 )
 
-type formatter struct {
-	style          string
+type encoder struct {
+	formatter      Formatter
 	data           value
 	path           []interface{}
 	currentValue   interface{}
 	currentComment string
 }
 
-func newFormatter(style string, data interface{}, comments map[interface{}]interface{}) formatter {
-	p := formatter{
-		style: style,
-		data: value{
-			data,
-			comments,
-		},
-		path: make([]interface{}, 0),
+func newEncoder(formatter Formatter, data value) encoder {
+	p := encoder{
+		formatter: formatter,
+		data:      data,
+		path:      make([]interface{}, 0),
 	}
 
 	p.get()
@@ -28,25 +25,25 @@ func newFormatter(style string, data interface{}, comments map[interface{}]inter
 	return p
 }
 
-func (p *formatter) get() {
+func (p *encoder) get() {
 	p.currentValue = p.data.Get(p.path)
 	p.currentComment = p.data.GetComment(p.path)
 }
 
-func (p *formatter) push(key interface{}) {
+func (p *encoder) push(key interface{}) {
 	p.path = append(p.path, key)
 	p.get()
 }
 
-func (p *formatter) pop() {
+func (p *encoder) pop() {
 	p.path = p.path[:len(p.path)-1]
 	p.get()
 }
 
-func (p formatter) indent(in string) string {
+func (p encoder) indent(in string) string {
 	indenter := "  "
 
-	if p.style == "json" {
+	if p.formatter.style == JSON {
 		indenter = "    "
 	}
 	parts := strings.Split(in, "\n")
@@ -57,18 +54,18 @@ func (p formatter) indent(in string) string {
 		}
 	}
 
-	if p.style == "json" {
+	if p.formatter.style == JSON {
 		return strings.Join(parts, "\n")
 	}
 
 	return strings.TrimLeft(strings.Join(parts, "\n"), " ")
 }
 
-func (p formatter) formatIntrinsic(key string) string {
+func (p encoder) formatIntrinsic(key string) string {
 	p.push(key)
 	defer p.pop()
 
-	if p.style == "json" {
+	if p.formatter.style == JSON {
 		return p.format()
 	}
 
@@ -84,7 +81,7 @@ func (p formatter) formatIntrinsic(key string) string {
 	}
 }
 
-func (p formatter) formatMap(data map[string]interface{}) string {
+func (p encoder) formatMap(data map[string]interface{}) string {
 	if len(data) == 0 {
 		return "{}"
 	}
@@ -99,7 +96,7 @@ func (p formatter) formatMap(data map[string]interface{}) string {
 		p.push(key)
 		fmtValue := p.format()
 
-		if p.style == "json" {
+		if p.formatter.style == JSON {
 			fmtValue = fmt.Sprintf("%q: %s", key, fmtValue)
 			if i < len(keys)-1 {
 				fmtValue += ","
@@ -155,11 +152,11 @@ func (p formatter) formatMap(data map[string]interface{}) string {
 
 	// Double gap for top-level elements
 	joiner := "\n"
-	if len(p.path) <= 1 {
+	if !p.formatter.compact && len(p.path) <= 1 {
 		joiner = "\n\n"
 	}
 
-	if p.style == "json" {
+	if p.formatter.style == JSON {
 		if p.currentComment != "" {
 			return "{  // " + p.currentComment + "\n" + p.indent(strings.Join(parts, joiner)) + "\n}"
 		}
@@ -177,7 +174,7 @@ func (p formatter) formatMap(data map[string]interface{}) string {
 	return output
 }
 
-func (p formatter) formatList(data []interface{}) string {
+func (p encoder) formatList(data []interface{}) string {
 	if len(data) == 0 {
 		return "[]"
 	}
@@ -188,14 +185,14 @@ func (p formatter) formatList(data []interface{}) string {
 		p.push(i)
 		fmtValue := p.format()
 
-		if p.style == "json" {
+		if p.formatter.style == JSON {
 			parts[i] = p.indent(fmtValue)
 		} else {
 			parts[i] = fmt.Sprintf("- %s", p.indent(fmtValue))
 		}
 
 		if p.currentComment != "" {
-			if p.style == "json" {
+			if p.formatter.style == JSON {
 				parts[i] += "  // " + p.currentComment
 			} else {
 				parts[i] += "  # " + p.currentComment
@@ -205,7 +202,7 @@ func (p formatter) formatList(data []interface{}) string {
 		p.pop()
 	}
 
-	if p.style == "json" {
+	if p.formatter.style == JSON {
 		if p.currentComment != "" {
 			return "[  // " + p.currentComment + "\n" + strings.Join(parts, ",\n") + "\n]"
 		}
@@ -216,14 +213,14 @@ func (p formatter) formatList(data []interface{}) string {
 	return strings.Join(parts, "\n")
 }
 
-func (p formatter) format() string {
+func (p encoder) format() string {
 	switch v := p.currentValue.(type) {
 	case map[string]interface{}:
 		return p.formatMap(v)
 	case []interface{}:
 		return p.formatList(v)
 	case string:
-		if p.style == "json" {
+		if p.formatter.style == JSON {
 			return fmt.Sprintf("%q", v)
 		}
 

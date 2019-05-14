@@ -26,24 +26,58 @@ elements of arrays in the source data.
 */
 package format
 
+const (
+	YAML = iota
+	JSON
+)
+
+type Formatter struct {
+	style   int
+	compact bool
+}
+
+func (f Formatter) SetYAML() {
+	f.style = YAML
+}
+
+func (f Formatter) SetJSON() {
+	f.style = JSON
+}
+
+func (f Formatter) SetCompact() {
+	f.compact = true
+}
+
+func (f Formatter) SetExpanded() {
+	f.compact = false
+}
+
+func (f Formatter) Format(data interface{}) string {
+	return f.FormatWithComments(data, nil)
+}
+
+func (f Formatter) FormatWithComments(data interface{}, comments map[interface{}]interface{}) string {
+	return newEncoder(f, value{data, comments}).format()
+}
+
 // Yaml formats the CloudFormation template as a Yaml string
-func Yaml(data map[string]interface{}) string {
+func Yaml(data interface{}) string {
 	return YamlWithComments(data, nil)
 }
 
 // YamlWithComments formats the CloudFormation template
 // as a Yaml string with comments as provided
-func YamlWithComments(data map[string]interface{}, comments map[interface{}]interface{}) string {
-	return newFormatter("yaml", data, comments).format()
+func YamlWithComments(data interface{}, comments map[interface{}]interface{}) string {
+	return newEncoder(Formatter{YAML, false}, value{data, comments}).format()
 }
 
 // Json formats the CloudFormation template as a Json string
-func Json(data map[string]interface{}) string {
+func Json(data interface{}) string {
 	return JsonWithComments(data, nil)
 }
 
 // JsonWithComments formats the CloudFormation template
 // as a Json string with comments as provided
-func JsonWithComments(data map[string]interface{}, comments map[interface{}]interface{}) string {
-	return newFormatter("json", data, comments).format()
+func JsonWithComments(data interface{}, comments map[interface{}]interface{}) string {
+	return newEncoder(Formatter{JSON, false}, value{data, comments}).format()
 }
