@@ -36,28 +36,35 @@ type Formatter struct {
 	compact bool
 }
 
-func (f Formatter) SetYAML() {
+func NewFormatter() Formatter {
+	return Formatter{
+		YAML,
+		false,
+	}
+}
+
+func (f *Formatter) SetYAML() {
 	f.style = YAML
 }
 
-func (f Formatter) SetJSON() {
+func (f *Formatter) SetJSON() {
 	f.style = JSON
 }
 
-func (f Formatter) SetCompact() {
+func (f *Formatter) SetCompact() {
 	f.compact = true
 }
 
-func (f Formatter) SetExpanded() {
+func (f *Formatter) SetExpanded() {
 	f.compact = false
 }
 
-func (f Formatter) Format(data interface{}) string {
+func (f *Formatter) Format(data interface{}) string {
 	return f.FormatWithComments(data, nil)
 }
 
-func (f Formatter) FormatWithComments(data interface{}, comments map[interface{}]interface{}) string {
-	return newEncoder(f, value{data, comments}).format()
+func (f *Formatter) FormatWithComments(data interface{}, comments map[interface{}]interface{}) string {
+	return newEncoder(*f, value{data, comments}).format()
 }
 
 // Yaml formats the CloudFormation template as a Yaml string

@@ -23,10 +23,12 @@ var usage = `Usage: cfn-format [OPTION...] [FILENAME]
 Options:
   --help    Show this message and exit.`
 
+var compactFlag bool
 var jsonFlag bool
 var writeFlag bool
 
 func init() {
+	pflag.BoolVarP(&compactFlag, "compact", "c", false, "Produce more compact output.")
 	pflag.BoolVarP(&jsonFlag, "json", "j", false, "Output the template as JSON (default format: YAML).")
 	pflag.BoolVarP(&writeFlag, "write", "w", false, "Write the output back to the file rather than to stdout.")
 
@@ -72,12 +74,17 @@ func main() {
 	}
 
 	// Format the output
-	var output string
+	formatter := format.NewFormatter()
+
 	if jsonFlag {
-		output = format.Json(source)
-	} else {
-		output = format.Yaml(source)
+		formatter.SetJSON()
 	}
+
+	if compactFlag {
+		formatter.SetCompact()
+	}
+
+	output := formatter.Format(source)
 
 	// Verify the output is valid
 	err = parse.VerifyOutput(source, output)
