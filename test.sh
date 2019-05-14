@@ -1,8 +1,10 @@
 #!/bin/bash
+set -e
 
 # Build a test binary
-export CFN_FORMAT_TEST_BINARY=$(mktemp)
-go build -o $CFN_FORMAT_TEST_BINARY
+export CFN_FORMAT_TEST_BINARY=$(mktemp -p ./)
+rm $CFN_FORMAT_TEST_BINARY
+go build -o $CFN_FORMAT_TEST_BINARY ./cmd/cfn-format
 
 # Get the example templates
 git clone --depth 1 https://github.com/awslabs/aws-cloudformation-templates &>/dev/null
