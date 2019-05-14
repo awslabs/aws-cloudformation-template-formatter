@@ -44,12 +44,11 @@ Usage: cfn-format [OPTION...] [FILENAME]
 
 Options:
   --help    Show this message and exit.
-  -j, --json    Output the template as JSON (default format: YAML).
-  -w, --write   Write the output back to the file rather than to stdout.
+  -c, --compact  Produce more compact output.
+  -j, --json     Output the template as JSON (default format: YAML).
+  -w, --write    Write the output back to the file rather than to stdout.
 ```
 
 ### Go package documentation
 
-**The API for cfn-format will be changing in 1.0.0**
-
-To see the current Go documentation for cfn-format, please check [format/exported.go](https://github.com/awslabs/aws-cloudformation-template-formatter/blob/0.3.0/format/exported.go).
+To see the current Go documentation for cfn-format, please check [format/exported.go](https://github.com/awslabs/aws-cloudformation-template-formatter/tree/master/format/format.go).
