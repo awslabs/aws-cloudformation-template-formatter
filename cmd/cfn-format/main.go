@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/awslabs/aws-cloudformation-template-formatter/format"
-	"github.com/awslabs/aws-cloudformation-template-formatter/parse"
+	"github.com/aws-cloudformation/rain/format"
+	"github.com/aws-cloudformation/rain/parse"
 
 	"github.com/andrew-d/go-termutil"
 	"github.com/spf13/pflag"

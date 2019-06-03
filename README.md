@@ -5,7 +5,7 @@
 
 # AWS CloudFormation Template Formatter
 
-This repository contains `cfn-format`, a command line tool and Go library that reads in an existing [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and outputs a cleanly-formatted, easy-to-read copy of the same template adhering to standards as used in AWS documentation. `cfn-format` can output either YAML or JSON as desired.
+This repository contains `cfn-format`, a command line tool that reads in an existing [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and outputs a cleanly-formatted, easy-to-read copy of the same template adhering to standards as used in AWS documentation. `cfn-format` can output either YAML or JSON as desired.
 
 ## License
 
@@ -51,4 +51,6 @@ Options:
 
 ### Go package documentation
 
-To see the current Go documentation for cfn-format, please check [format/exported.go](https://github.com/awslabs/aws-cloudformation-template-formatter/tree/master/format/format.go).
+The `parse` and `format` packages have moved to become part of [rain](https://github.com/aws-cloudformation/rain).
+
+To see the current Go documentation, please check [the Rain source code](https://github.com/aws-cloudformation/rain/tree/master/format/format.go).
