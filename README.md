@@ -44,9 +44,11 @@ Usage: cfn-format [OPTION...] [FILENAME]
 
 Options:
   --help    Show this message and exit.
-  -c, --compact  Produce more compact output.
-  -j, --json     Output the template as JSON (default format: YAML).
-  -w, --write    Write the output back to the file rather than to stdout.
+  -c, --compact   Produce more compact output.
+  -j, --json      Output the template as JSON (default format: YAML).
+  -v, --verify    Check if the input is already correctly formatted and exit.
+                  The exit status will be 0 if so and 1 if not.
+  -w, --write     Write the output back to the file rather than to stdout.
 ```
 
 ### Go package documentation
