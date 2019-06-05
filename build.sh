@@ -27,7 +27,7 @@ for platform in ${!platforms[@]}; do
             name=${name}.exe
         fi
 
-        GOOS=$platform GOARCH=$architecture go build -o $DESTDIR/$name
+        GOOS=$platform GOARCH=$architecture go build -o $DESTDIR/$name ./cmd/cfn-format/*
     done
 done
 
