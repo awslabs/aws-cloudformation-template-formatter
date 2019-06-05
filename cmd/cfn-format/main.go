@@ -25,11 +25,13 @@ Options:
 
 var compactFlag bool
 var jsonFlag bool
+var verifyFlag bool
 var writeFlag bool
 
 func init() {
 	pflag.BoolVarP(&compactFlag, "compact", "c", false, "Produce more compact output.")
 	pflag.BoolVarP(&jsonFlag, "json", "j", false, "Output the template as JSON (default format: YAML).")
+	pflag.BoolVarP(&verifyFlag, "verify", "v", false, "Check if the input is already correctly formatted and exit.\nThe exit status will be 0 if so and 1 if not.")
 	pflag.BoolVarP(&writeFlag, "write", "w", false, "Write the output back to the file rather than to stdout.")
 
 	pflag.Usage = func() {
@@ -46,6 +48,7 @@ func die(message string) {
 
 func main() {
 	var fileName string
+	var input []byte
 	var source map[string]interface{}
 	var err error
 
@@ -55,7 +58,7 @@ func main() {
 	if len(args) == 1 {
 		// Reading from a file
 		fileName = args[0]
-		source, err = parse.ReadFile(fileName)
+		input, err = ioutil.ReadFile(fileName)
 		if err != nil {
 			die(err.Error())
 		}
@@ -65,12 +68,17 @@ func main() {
 			die("Can't write back to a file when reading from stdin")
 		}
 
-		source, err = parse.Read(os.Stdin)
+		input, err = ioutil.ReadAll(os.Stdin)
 		if err != nil {
 			die(err.Error())
 		}
 	} else {
 		pflag.Usage()
+	}
+
+	source, err = parse.ReadString(string(input))
+	if err != nil {
+		die(err.Error())
 	}
 
 	// Format the output
@@ -85,6 +93,15 @@ func main() {
 	}
 
 	output := formatter.Format(source)
+
+	if verifyFlag {
+		if string(input) == output {
+			fmt.Println("Formatted OK")
+			os.Exit(0)
+		} else {
+			die(output)
+		}
+	}
 
 	// Verify the output is valid
 	err = parse.VerifyOutput(source, output)
