@@ -17,11 +17,11 @@ You can install `cfn-format` in one of the following three ways:
 
 * Use the [snap package](https://snapcraft.io/cfn-format)
 
-* If you have [go](https://golang.org/) installed, run the following:
-
-    `go install github.com/awslabs/aws-cloudformation-template-formatter/cmd/cfn-format`
-
 * Download the [latest release](https://github.com/awslabs/aws-cloudformation-template-formatter/releases/latest) for your operating system.
+
+* If you have [Go](https://golang.org/) (v1.12 or higher) installed, run the following:
+
+    `GO111MODULE=on go get github.com/awslabs/aws-cloudformation-template-formatter/cmd/cfn-format`
 
 ## Usage
 
