@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/aws-cloudformation/rain/format"
-	"github.com/aws-cloudformation/rain/parse"
+	"github.com/aws-cloudformation/rain/cfn"
+	"github.com/aws-cloudformation/rain/cfn/format"
+	"github.com/aws-cloudformation/rain/cfn/parse"
 
 	"github.com/andrew-d/go-termutil"
 	"github.com/spf13/pflag"
@@ -49,7 +50,7 @@ func die(message string) {
 func main() {
 	var fileName string
 	var input []byte
-	var source map[string]interface{}
+	var source cfn.Template
 	var err error
 
 	pflag.Parse()
@@ -76,23 +77,23 @@ func main() {
 		pflag.Usage()
 	}
 
-	source, err = parse.ReadString(string(input))
+	source, err = parse.String(string(input))
 	if err != nil {
 		die(err.Error())
 	}
 
 	// Format the output
-	formatter := format.NewFormatter()
+	options := format.Options{}
 
 	if jsonFlag {
-		formatter.SetJSON()
+		options.Style = format.JSON
 	}
 
 	if compactFlag {
-		formatter.SetCompact()
+		options.Compact = true
 	}
 
-	output := formatter.Format(source)
+	output := format.Template(source, options)
 
 	if verifyFlag {
 		if string(input) == output {
@@ -104,7 +105,7 @@ func main() {
 	}
 
 	// Verify the output is valid
-	err = parse.VerifyOutput(source, output)
+	err = parse.Verify(source, output)
 	if err != nil {
 		die(err.Error())
 	}
