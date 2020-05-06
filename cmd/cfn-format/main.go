@@ -96,11 +96,14 @@ func main() {
 	output := format.Template(source, options)
 
 	if verifyFlag {
+		if len(fileName) > 0 {
+			fmt.Fprint(os.Stderr, fileName+": ")
+		}
 		if string(input) == output {
-			fmt.Println("Formatted OK")
+			fmt.Fprintln(os.Stderr, "formatted OK")
 			os.Exit(0)
 		} else {
-			die(output)
+			die("would reformat")
 		}
 	}
 
