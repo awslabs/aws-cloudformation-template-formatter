@@ -1,7 +1,6 @@
 FROM golang:alpine as builder
-RUN mkdir /build
-ADD . /build/
 WORKDIR /build
+ADD . .
 ARG opts
 RUN env CGO_ENABLED=0 ${opts} go build -ldflags="-w -s" -o cfn-format ./cmd/cfn-format/*
 
