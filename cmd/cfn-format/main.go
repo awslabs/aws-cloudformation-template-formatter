@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/aws-cloudformation/rain/cfn"
 	"github.com/aws-cloudformation/rain/cfn/format"
@@ -99,7 +100,7 @@ func main() {
 		if len(fileName) > 0 {
 			fmt.Fprint(os.Stderr, fileName+": ")
 		}
-		if string(input) == output {
+		if strings.TrimSpace(string(input)) == output {
 			fmt.Fprintln(os.Stderr, "formatted OK")
 			os.Exit(0)
 		} else {
