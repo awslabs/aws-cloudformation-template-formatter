@@ -9,6 +9,6 @@ errors=$(
 # Print out any errors
 if [ -n "$errors" ]; then
     echo ">>> $1"
-    echo $errors
+    echo "$errors"
     echo
 fi
