@@ -7,7 +7,7 @@ set -e
 NAME=cfn-format
 OUTPUT_DIR=dist
 
-VERSION=$(git describe)
+VERSION=$(git describe --abbrev=0)
 
 declare -A PLATFORMS=([linux]=linux [darwin]=macos [windows]=windows)
 declare -A ARCHITECTURES=([386]=i386 [amd64]=amd64 [arm]=arm [arm64]=arm64)
