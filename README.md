@@ -55,4 +55,4 @@ Options:
 
 The `parse` and `format` packages have moved to become part of [rain](https://github.com/aws-cloudformation/rain).
 
-To see the current Go documentation, please check [the Rain source code](https://github.com/aws-cloudformation/rain/tree/master/format/format.go).
+To see the current Go documentation, please check [the Rain source code](https://github.com/aws-cloudformation/rain/tree/main/cft/format).
