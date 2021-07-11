@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws-cloudformation/rain/cfn"
-	"github.com/aws-cloudformation/rain/cfn/format"
-	"github.com/aws-cloudformation/rain/cfn/parse"
+	"github.com/aws-cloudformation/rain/cft"
+	"github.com/aws-cloudformation/rain/cft/format"
+	"github.com/aws-cloudformation/rain/cft/parse"
 
 	"github.com/andrew-d/go-termutil"
 	"github.com/spf13/pflag"
@@ -25,13 +25,11 @@ var usage = `Usage: cfn-format [OPTION...] [FILENAME]
 Options:
   --help    Show this message and exit.`
 
-var compactFlag bool
 var jsonFlag bool
 var verifyFlag bool
 var writeFlag bool
 
 func init() {
-	pflag.BoolVarP(&compactFlag, "compact", "c", false, "Produce more compact output.")
 	pflag.BoolVarP(&jsonFlag, "json", "j", false, "Output the template as JSON (default format: YAML).")
 	pflag.BoolVarP(&verifyFlag, "verify", "v", false, "Check if the input is already correctly formatted and exit.\nThe exit status will be 0 if so and 1 if not.")
 	pflag.BoolVarP(&writeFlag, "write", "w", false, "Write the output back to the file rather than to stdout.")
@@ -51,7 +49,7 @@ func die(message string) {
 func main() {
 	var fileName string
 	var input []byte
-	var source cfn.Template
+	var source cft.Template
 	var err error
 
 	pflag.Parse()
@@ -87,14 +85,10 @@ func main() {
 	options := format.Options{}
 
 	if jsonFlag {
-		options.Style = format.JSON
+		options.JSON = true
 	}
 
-	if compactFlag {
-		options.Compact = true
-	}
-
-	output := format.Template(source, options)
+	output := format.String(source, options)
 
 	if verifyFlag {
 		if len(fileName) > 0 {
