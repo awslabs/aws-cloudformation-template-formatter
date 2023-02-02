@@ -16,6 +16,10 @@ import (
 
 var usage = `Usage: cfn-format [OPTION...] [FILENAME]
 
+  NOTICE: cfn-format is now deprecated.
+  Please use https://github.com/aws-cloudformation/rain instead
+  See https://aws-cloudformation.github.io/rain/rain_fmt.html
+
   AWS CloudFormation Format is a tool that reads a CloudFormation template
   and outputs the same template, formatted according to the same standards
   used in AWS documentation.
