@@ -1,3 +1,11 @@
+**NOTICE:** AWS CloudFormation Template Formatter is now *deprecated*.
+
+You should use [rain](https://github.com/aws-cloudformation/rain) instead. `rain fmt` is equivalent to `cfn-format`.
+
+See [the rain fmt documentation](https://aws-cloudformation.github.io/rain/rain_fmt.html) for details.
+
+---
+
 [![GitHub version](https://badge.fury.io/gh/awslabs%2Faws-cloudformation-template-formatter.svg)](https://badge.fury.io/gh/awslabs%2Faws-cloudformation-template-formatter)
 [![Snap Status](https://build.snapcraft.io/badge/awslabs/aws-cloudformation-template-formatter.svg)](https://build.snapcraft.io/user/awslabs/aws-cloudformation-template-formatter)
 
