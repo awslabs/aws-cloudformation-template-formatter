@@ -16,8 +16,7 @@ jobs:
 
       - run: |
           apt-get update && \
-          apt-get install -y hub zip && \
-          go get -u golang.org/x/lint/golint
+          apt-get install -y hub zip
 
       - run: |
           ./build.sh
