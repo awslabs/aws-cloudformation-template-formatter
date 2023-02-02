@@ -21,11 +21,11 @@ echo "Building $NAME $VERSION..."
 
 for platform in ${!PLATFORMS[@]}; do
     for architecture in ${!ARCHITECTURES[@]}; do
-        if [[ "$architecture" == arm* && "$platform" != "linux" ]]; then
+        if [[ "$architecture" == "386" && "$platform" == "darwin" ]]; then
             continue
         fi
 
-        if [[ "$architecture" == "386" && "$platform" == "darwin" ]]; then
+        if [[ "$architecture" == "arm" && "$platform" == "darwin" ]]; then
             continue
         fi
 
