@@ -38,7 +38,7 @@ jobs:
 
       - run: '(echo ${GITHUB_REF##*/}; echo; git cherry -v $(git describe --abbrev=0 HEAD^) | cut -d" " -f3-) > CHANGELOG'
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: dist
           path: dist
